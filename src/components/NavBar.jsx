@@ -25,44 +25,75 @@ const NavBar = () => {
   }
 
   return (
-    <div className="navbar bg-base-300 shadow-sm">
-      <div className="flex-1">
-        <Link to="/" className="btn btn-ghost text-xl">🧑‍💻DevTinder</Link>
-      </div>
-        { user &&(
-        <div className="dropdown dropdown-end mx-5 flex">
-          <p className="px-4">Welcome, {user.firstName}</p>
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle avatar"
-          >
-              <div className="w-10 rounded-full">
-              <img
-                alt="Tailwind CSS Navbar component"
-                src={user.photoUrl}
-              />
-            </div>
-          </div>
-          <ul
-            tabIndex="-1"
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
-          >
+   <div className="navbar bg-base-300 shadow-sm px-4 md:px-8">
+  {/* left: brand / title (always left) */}
+  <div className="flex items-center gap-3">
+    <Link to="/" className="btn btn-ghost normal-case text-lg md:text-xl flex items-center gap-2">
+      <span className="text-2xl">🧑‍💻</span>
+      <span className="font-semibold">DevTinder</span>
+    </Link>
+  </div>
+
+  {/* spacer */}
+  <div className="flex-1"></div>
+
+  {/* right: user area */}
+  {user && (
+    <div className="flex items-center gap-3">
+      {/* welcome text - hidden on very small screens */}
+      <p className="hidden sm:block text-sm px-2">Welcome, {user.firstName}</p>
+
+      {/* mobile hamburger (visible on small only) */}
+      <div className="md:hidden">
+        <div className="dropdown">
+          <label tabIndex={0} className="btn btn-ghost btn-square" aria-label="Open menu">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </label>
+          <ul tabIndex={0} className="menu menu-compact dropdown-content mt-2 p-2 shadow bg-base-100 rounded-box w-48">
             <li>
               <Link to="/profile" className="justify-between">
-                Profile
-                <span className="badge">New</span>
+                Profile <span className="badge">New</span>
               </Link>
             </li>
-            <li>
-              <a>Settings</a>
-            </li>
-            <li>
-              <a onClick={handleLogout}>Logout</a>
-            </li>
+            <li><Link to="/connections">Connections</Link></li>
+            <li><Link to="/requests">Requests</Link></li>
+            <li><button onClick={handleLogout} className="w-full text-left">Logout</button></li>
           </ul>
-        </div>)}
+        </div>
       </div>
+
+      {/* avatar + dropdown (desktop) */}
+      <div className="dropdown dropdown-end hidden md:block">
+        <label
+          tabIndex={0}
+          role="button"
+          className="btn btn-ghost btn-circle avatar focus:outline-none"
+          aria-haspopup="true"
+          aria-expanded="false"
+          title={`Open menu for ${user.firstName}`}
+        >
+          <div className="w-10 rounded-full overflow-hidden ring-1 ring-primary/25">
+            <img alt={`${user.firstName} avatar`} src={user.photoUrl} className="object-cover w-full h-full" />
+          </div>
+        </label>
+
+        <ul tabIndex={0} className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow">
+          <li>
+            <Link to="/profile" className="justify-between">
+              Profile <span className="badge">New</span>
+            </Link>
+          </li>
+          <li><Link to="/connections">Connections</Link></li>
+          <li><Link to="/requests">Requests</Link></li>
+          <li><button onClick={handleLogout} className="w-full text-left">Logout</button></li>
+        </ul>
+      </div>
+    </div>
+  )}
+</div>
+
   );
 };
 
