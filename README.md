@@ -31,7 +31,6 @@
 - Feature - Accept/Reject Connection Request
 
 Remaining:
-    - Send/ignore the user card from Feed
     - Signup New User
     - E2E Testing
 
