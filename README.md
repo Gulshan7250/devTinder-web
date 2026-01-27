@@ -50,6 +50,51 @@
     - sudo scp -r dist/* /var/www/html/
      Enable port :80 of your instance
 
+
+# Adding a custom Domain name
+    - purchased domain name from godaddy
+    - signup on cloudflare & add a new domain name
+    - change the nameservers on godaddy and point it to cloudflare
+    - wait for sometime till your nameservers are updated ~15 minutes
+    - DNS record: A devtinderonline.info
+    - Enable SSL for website
+# Sending Emails via SES
+    - create a IAM user
+    - Give Access to AmazonSESFullAccess
+    - Amazon SES: Create an Identity
+    - Verify your domain name
+    - Verify an email address
+    - Install AWS SDK - v3
+    - Setup SesClient
+    - Access Credentials should be created in IAM under SecurityCredentials Tab
+    - Add the credentials to the env file
+    - Write code for SESClient
+    - Write code for Sending email address
+    - Make the email dynamic by passing more params to the run function
+
+# Scheduling cron jobs in NodeJS
+    - Installing node-cron
+    - Learning about cron expressions syntax - crontab.guru
+    - Schedule a job
+    - date-fns
+    - Find all the unique email Id who have got connection Request in previous days
+    - Send Email
+    - Explore queue mechanism to send bulk emails
+    - Amazon SES Bulk Emails
+    - Make sendEmail function dynamic
+    - bee-queue & bull npm packages 
+
+# Razorpay Payment Gateway Integration
+    - Sign up on Razorpay & complete KYC
+    - Created a UI for premium page
+    - Creating an API for create order in backend
+    - added my key and secret in env file
+    - Intialized Razorpay in utils
+    - creating Schema and model
+    - saved the order in payments collection
+    - make the API dynamic
+    - setup razorpay webhook on your live api
+
 Body
     NavBar
     Route=/ => Feed
