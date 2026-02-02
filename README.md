@@ -95,6 +95,9 @@
     - make the API dynamic
     - setup razorpay webhook on your live api
 
+
+# Real time Chat using Websocket(Socket.io)
+
 Body
     NavBar
     Route=/ => Feed
