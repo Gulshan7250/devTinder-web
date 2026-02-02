@@ -13,53 +13,59 @@ const Chat = () => {
   const user = useSelector((store) => store.user);
   const userId = user?._id;
 
-  const fetchChatMessages = async () => {
-    const chat = await axios.get(BASE_URL + "/chat/" + targetUserId,
-      {
-        withCredentials: true,
-      }
-    );
-    console.log(chat.data.messages);
-  };
-
-  useEffect(()=>{
-    fetchChatMessages();
-  },
-  []);
-
-  // 🔥 single socket reference
   const socketRef = useRef(null);
 
+  /* ================= FETCH OLD MESSAGES ================= */
   useEffect(() => {
-    if (!userId) return;
+    if (!targetUserId) return;
 
-    // create socket only once
-    socketRef.current = createSocketConnection();
+    const fetchChatMessages = async () => {
+      try {
+        const res = await axios.get(
+          `${BASE_URL}/chat/${targetUserId}`,
+          { withCredentials: true }
+        );
+        setMessages(res.data.messages || []);
+      } catch (err) {
+        console.log("Fetch chat error:", err);
+      }
+    };
 
-    // join chat room
+    fetchChatMessages();
+  }, [targetUserId]);
+
+  /* ================= SOCKET SETUP ================= */
+  useEffect(() => {
+    if (!userId || !targetUserId) return;
+
+    // create socket once
+    if (!socketRef.current) {
+      socketRef.current = createSocketConnection();
+    }
+
     socketRef.current.emit("joinChat", {
-      firstName: user.firstName,
       userId,
       targetUserId,
     });
 
-    // receive messages
-    socketRef.current.on("messageReceived", ({ firstName, text }) => {
-      setMessages((prev) => [...prev, { firstName, text }]);
-    });
-
-    // cleanup
-    return () => {
-      socketRef.current.off("messageReceived");
-      socketRef.current.disconnect();
+    const handleMessageReceived = ({ senderId, text }) => {
+      setMessages((prev) => [...prev, { senderId, text }]);
     };
-  }, [userId, targetUserId, user.firstName]);
 
+    socketRef.current.on("messageReceived", handleMessageReceived);
+
+    return () => {
+      socketRef.current.off("messageReceived", handleMessageReceived);
+      socketRef.current.disconnect();
+      socketRef.current = null;
+    };
+  }, [userId, targetUserId]);
+
+  /* ================= SEND MESSAGE ================= */
   const sendMessage = () => {
-    if (!newMessage.trim()) return;
+    if (!newMessage.trim() || !socketRef.current) return;
 
     socketRef.current.emit("sendMessage", {
-      firstName: user.firstName,
       userId,
       targetUserId,
       text: newMessage,
@@ -87,7 +93,7 @@ const Chat = () => {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((msg, index) => {
-          const isMe = msg.firstName === user.firstName;
+          const isMe = msg.senderId === userId;
 
           return (
             <div
@@ -100,9 +106,7 @@ const Chat = () => {
                 }`}
               >
                 {!isMe && (
-                  <p className="text-xs text-gray-400 mb-1">
-                    {msg.firstName}
-                  </p>
+                  <p className="text-xs text-gray-400 mb-1">Friend</p>
                 )}
                 {msg.text}
               </div>

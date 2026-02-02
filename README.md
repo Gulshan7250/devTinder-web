@@ -97,6 +97,15 @@
 
 
 # Real time Chat using Websocket(Socket.io)
+    - Build the UI for a chat window on /chat/:targetUserId
+    - setup socket.io in backend
+    - npm i socket.io
+    - Setup frontend socket.io-client
+    - Initialise the chat
+    - createSocketConnection
+    - listen to events
+    - Homework, improve the UI
+    - Fixx Security Bug
 
 Body
     NavBar
